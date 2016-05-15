@@ -8,7 +8,19 @@ import (
 	"net/http"
 )
 
-func (np *NeoPixel) ActionPOST(w http.ResponseWriter, r *http.Request) {
+// Color - json object for holding color connands
+type Color struct {
+	ColorName string  `json:"colorname"`
+	Value     []uint8 `json:"colorvalue"`
+}
+
+// Action - generic action handeler object
+type Action struct {
+	Do string `json:"action"`
+}
+
+// ActionPOST -- Handler for Actions
+func (l *LedStrip) ActionPOST(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering Action Handler")
 	var action Action
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -29,11 +41,24 @@ func (np *NeoPixel) ActionPOST(w http.ResponseWriter, r *http.Request) {
 	log.Println(action.Do)
 	switch action.Do {
 	case "test":
-		np.TestStrip()
+		l.TestStrip()
+	case "test2":
+		l.TestStrip2()
+	case "theater":
+		l.TheaterChase(white, 100)
+	case "theaterred":
+		l.TheaterChase(red, 100)
+	case "theatergreen":
+		l.TheaterChase(green, 100)
+	case "theaterblue":
+		l.TheaterChase(blue, 100)
+	case "rainbow":
+		l.Rainbow(100)
 	}
 }
 
-func (np *NeoPixel) SetColorPOST(w http.ResponseWriter, r *http.Request) {
+// SetColorPOST -- Handler for setting static colors
+func (l *LedStrip) SetColorPOST(w http.ResponseWriter, r *http.Request) {
 	var color = new(Color)
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
@@ -53,17 +78,16 @@ func (np *NeoPixel) SetColorPOST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	colorMap := GetColorMap()
-	log.Println(color.Value)
-	if len(color.Value) == 0 {
-		color.Value = colorMap[color.ColorName]
-	}
+	c := colorMap[color.ColorName]
 
-	log.Printf("Setting color %v on %v leds.\n", color.Value, np.leds)
-	np.SetColor(color.Value)
-	np.Sync()
+	log.Printf("Setting color %v on %v leds.\n", c, l.leds)
+	l.SetStripColor(*c)
+	l.Sync()
 	w.WriteHeader(http.StatusOK)
 }
 
+/*
+// ColorPOST -- post for setting colors of strip frames
 func (np *NeoPixel) ColorPOST(w http.ResponseWriter, r *http.Request) {
 	var leds Leds
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -87,6 +111,7 @@ func (np *NeoPixel) ColorPOST(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// AnimPOST -- something animation related. Not sure yet.
 func (np *NeoPixel) AnimPOST(w http.ResponseWriter, r *http.Request) {
 	var anim Anim
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -107,3 +132,4 @@ func (np *NeoPixel) AnimPOST(w http.ResponseWriter, r *http.Request) {
 	np.Anim <- &anim
 	w.WriteHeader(http.StatusOK)
 }
+*/

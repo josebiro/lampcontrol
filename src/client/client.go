@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	//"flag"
 	"log"
 	"neopixel"
 	"net/http"
@@ -56,8 +54,5 @@ func main() {
 	defer resp.Body.Close()
 
 	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("response Body:", string(body))
 
 }

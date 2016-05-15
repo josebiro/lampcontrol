@@ -74,6 +74,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Linux Workspace files
+# =======================
 bin/
 src/main
 src/server/server

@@ -22,14 +22,14 @@ func main() {
 	}
 
 	// Initialize the strip with unmber of lights and usb parameters
-	np := neopixel.New(60, usbport, usbspeed)
-	log.Println("NeoPixel USB initialized.")
+	strip := neopixel.NewStrip(60, usbport, usbspeed)
+	log.Println("NeoPixel Strip USB initialized.")
 
 	time.Sleep(time.Second * 1)
-	http.HandleFunc("/color", np.ColorPOST)
-	http.HandleFunc("/setcolor", np.SetColorPOST)
-	http.HandleFunc("/action", np.ActionPOST)
-	http.HandleFunc("/anim", np.AnimPOST)
+	//http.HandleFunc("/color", np.ColorPOST)
+	http.HandleFunc("/setcolor", strip.SetColorPOST)
+	http.HandleFunc("/action", strip.ActionPOST)
+	//http.HandleFunc("/anim", np.AnimPOST)
 	hostport = ":8080"
 	log.Printf("Starting server on %v\n", hostport)
 	http.ListenAndServe(hostport, nil)
