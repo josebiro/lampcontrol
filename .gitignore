@@ -73,3 +73,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+bin/
+src/main
+src/server/server
+src/client/client
+src/github.com/

@@ -26,7 +26,7 @@ type SerialConnection struct {
 
 func (s *SerialConnection) init() error {
 	var err error
-	s.c = &serial.Config{Name: "COM3", Baud: 250000}
+	s.c = &serial.Config{Name: "/dev/ttyACM0", Baud: 250000}
 	s.s, err = serial.OpenPort(s.c)
 	if err != nil {
 		return err
