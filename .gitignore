@@ -77,7 +77,7 @@ $RECYCLE.BIN/
 # Linux Workspace files
 # =======================
 bin/
-src/main
+pkg/
 src/server/server
 src/client/client
 src/github.com/
