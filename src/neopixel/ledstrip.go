@@ -1,9 +1,10 @@
 package neopixel
 
 import (
-	"github.com/tarm/serial"
 	"log"
 	"sync"
+
+	"github.com/tarm/serial"
 )
 
 // Led - object to hold specific LED color values
@@ -85,11 +86,11 @@ func (l *LedStrip) Sync() {
 func (l *LedStrip) reader() {
 	buf := make([]byte, 128)
 	for {
-		_, err := l.s.Read(buf)
+		n, err := l.s.Read(buf)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		//log.Printf("Received %d bytes: [%s]", n, buf[:n])
+		log.Printf("Received %d bytes: [%s]", n, buf[:n])
 		l.Unlock()
 	}
 }
@@ -100,11 +101,11 @@ func (l *LedStrip) writer() {
 		if !ok {
 			log.Fatal("writer chan closed")
 		}
-		_, err := l.s.Write(b)
+		n, err := l.s.Write(b)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		//log.Printf("Sent %d bytes", n)
+		log.Printf("Sent %d bytes", n)
 	}
 }
 

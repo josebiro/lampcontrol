@@ -15,7 +15,7 @@ func main() {
 
 	if runtime.GOOS == "windows" {
 		usbport = "COM3"
-		usbspeed = 250000
+		usbspeed = 115200
 	} else {
 		usbport = "/dev/ttyACM0"
 		usbspeed = 115200
