@@ -100,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
         btnPurple = (Button) findViewById(R.id.btn_purple);
 
         final ColorSeekBar colorSeekBar = (ColorSeekBar) findViewById(R.id.colorSlider);
-        final CheckBox showAlphaCheckBox = (CheckBox) findViewById(R.id.checkBox);
-        final SeekBar barHeightSeekBar = (SeekBar) findViewById(R.id.seekBar);
-        final SeekBar thumbHeightSeekBar = (SeekBar) findViewById(R.id.seekBar2);
-        
+        //final CheckBox showAlphaCheckBox = (CheckBox) findViewById(R.id.checkBox);
+        //final SeekBar barHeightSeekBar = (SeekBar) findViewById(R.id.seekBar);
+        //final SeekBar thumbHeightSeekBar = (SeekBar) findViewById(R.id.seekBar2);
+
         btnLampOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,7 +177,17 @@ public class MainActivity extends AppCompatActivity {
                 new SetColor().execute("purple");
             }
         });
-
+        colorSeekBar.setColors(R.array.material_colors);
+        colorSeekBar.setBarHeight(10);
+        colorSeekBar.setThumbHeight(50);
+        colorSeekBar.setOnColorChangeListener(new ColorSeekBar.OnColorChangeListener() {
+            @Override
+            public void onColorChangeListener(int colorBarValue, int alphaBarValue, int color) {
+                String c = "#" + Integer.toHexString(color).substring(2);
+                Log.i("ColorSeekBar","color: " + c);
+                new SetColorHex().execute(c);
+            }
+        });
     }
 
     private class SetColor extends AsyncTask<String, Void, String> {
@@ -258,6 +268,83 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class SetColorHex extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i("SetColor", "Entering SetColor method.");
+            Log.i("SetColor", "Setting color to " + params[0]);
+            HttpURLConnection c = null;
+            BufferedReader r = null;
+            String response;
+            JSONObject action;
+            // Send the lamp on command (white light)
+            try {
+                action = new JSONObject();
+                action.put("colorhex", params[0]);
+                Log.i("SetColor", action.toString());
+            } catch (JSONException e) {
+                Log.e("SetColor", e.getLocalizedMessage());
+                return null;
+            }
+            try {
+                byte[] postData = action.toString().getBytes("UTF-8");
+                int postDataLength = postData.length;
+                Log.i("SetColor", "Content Length is:" + postDataLength);
+
+                URL url = new URL(serverUrl + "/setcolor");
+                Log.i("SetColor", url.toString());
+
+                c = (HttpURLConnection) url.openConnection();
+                c.setInstanceFollowRedirects(false);
+                c.setRequestMethod("POST");
+                c.setRequestProperty("X-Custom-Header", "lampcontrol");
+                c.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                c.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+                c.setUseCaches(false);
+                c.setConnectTimeout(500);
+                OutputStream os = c.getOutputStream();
+                os.write(postData);
+                os.close();
+
+                InputStream input = new BufferedInputStream(c.getInputStream());
+                StringBuffer buffer = new StringBuffer();
+                if (input == null) {
+                    // nothing to do
+                    return null;
+                }
+                r = new BufferedReader(new InputStreamReader(input));
+
+                String line;
+                while ((line = r.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+                if (buffer.length() == 0) {
+                    Log.i("SetColor", "No data returned");
+                }
+                int status = c.getResponseCode();
+                response = buffer.toString();
+                Log.i("SetColor", "Response:" + status + response);
+            }
+            catch (IOException e) {
+                Log.i("[ERROR]SetColor", e.getLocalizedMessage());
+                return null;
+            }
+            finally {
+                if (c != null) {
+                    c.disconnect();
+                }
+                if (r != null) {
+                    try {
+                        r.close();
+                    } catch (final IOException e) {
+                        Log.e("SetColor", "Error Closing Stream", e);
+                    }
+                }
+            }
+            return response;
+        }
+    }
 
 
     @Override

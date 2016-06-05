@@ -6,12 +6,34 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Color - json object for holding color connands
 type Color struct {
 	ColorName string  `json:"colorname"`
 	Value     []uint8 `json:"colorvalue"`
+	Hex       string  `json:"colorhex"`
+}
+
+// HexToValue - converts hex string to color values in uint8 array format
+func (c *Color) HexToValue() {
+	value := []uint8{0, 0, 0, 0}
+	// check length, if not 6 characters, fail
+	log.Printf("c.Hex = %v, length=%v\n", c.Hex, len(c.Hex))
+	if len(c.Hex) != 7 {
+		log.Println("ERROR: string is not a hex color value.")
+	}
+	red := "0x" + c.Hex[1:3]
+	gre := "0x" + c.Hex[3:5]
+	blu := "0x" + c.Hex[5:7]
+	r, _ := strconv.ParseUint(red, 0, 8)
+	g, _ := strconv.ParseUint(gre, 0, 8)
+	b, _ := strconv.ParseUint(blu, 0, 8)
+	value[0] = uint8(r)
+	value[1] = uint8(g)
+	value[2] = uint8(b)
+	c.Value = value
 }
 
 // Action - generic action handeler object
@@ -77,9 +99,21 @@ func (l *LedStrip) SetColorPOST(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 	}
 
-	colorMap := GetColorMap()
-	c := colorMap[color.ColorName]
+	// The only value that is important is Color.Value, everything else translates
+	// into that value.
 
+	// ColorValue is set; color name is not, color hex is not
+	// ColorHex is set; color name is not, color value is not
+
+	// ColorName is set; color value is not, color Hex is Not
+	colorMap := GetColorMap()
+	c := new(Rgbw)
+	if color.ColorName != "" {
+		c = colorMap[color.ColorName]
+	} else {
+		color.HexToValue()
+		c.RgbwFromUintArray(color.Value)
+	}
 	log.Printf("Setting color %v on %v leds.\n", c, l.leds)
 	l.SetStripColor(*c)
 	l.Sync()
