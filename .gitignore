@@ -90,6 +90,7 @@ src/honnef.co/
 *.iml
 .gradle
 /local.properties
+android-client/.idea/
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
