@@ -11,16 +11,20 @@
     tools:context="com.josebiro.lampcontrol.MainActivity">
 
     <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:columnCount="3"
         android:rowCount="6"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="false"
+        android:useDefaultMargins="false"
+        android:transitionGroup="false">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="On"
             android:id="@+id/btn_lamp_on"
@@ -29,7 +33,7 @@
             android:layout_margin="5dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Off"
             android:id="@+id/btn_lamp_off"
@@ -38,15 +42,18 @@
             android:layout_margin="5dp" />
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:id="@+id/btn_settings"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:layout_gravity="center"
-            android:layout_margin="5dp" />
+            android:src="@drawable/gear"
+            android:layout_margin="5dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:layout_gravity="center" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Red"
             android:id="@+id/btn_red"
@@ -59,7 +66,7 @@
             android:textColor="#FFD7FF" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Blue"
             android:id="@+id/btn_blue"
@@ -71,7 +78,7 @@
             android:textColor="#ffffff" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Green"
             android:id="@+id/btn_green"
@@ -82,7 +89,7 @@
             android:layout_margin="5dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Orange"
             android:id="@+id/btn_orange"
@@ -93,7 +100,7 @@
             android:layout_margin="5dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Indigo"
             android:id="@+id/btn_indigo"
@@ -105,7 +112,7 @@
             android:textColor="#ffffff" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="White"
             android:id="@+id/btn_white"
@@ -116,7 +123,7 @@
             android:layout_margin="5dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Yellow"
             android:id="@+id/btn_yellow"
@@ -127,7 +134,7 @@
             android:layout_margin="5dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Violet"
             android:id="@+id/btn_violet"
@@ -139,7 +146,7 @@
             android:textColor="#ffffff" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="Purple"
             android:id="@+id/btn_purple"
