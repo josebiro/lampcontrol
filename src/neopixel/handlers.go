@@ -75,7 +75,7 @@ func (l *LedStrip) ActionPOST(w http.ResponseWriter, r *http.Request) {
 	case "theaterblue":
 		l.TheaterChase(blue, 100)
 	case "rainbow":
-		l.Rainbow(100)
+		l.Rainbow(l.Done, 100)
 	}
 }
 

@@ -2,6 +2,7 @@ package neopixel
 
 import (
 	"log"
+	"sync"
 	"time"
 )
 
@@ -40,17 +41,30 @@ func Wheel(pos int) Rgbw {
 }
 
 // Rainbow - rainbow effect
-func (l *LedStrip) Rainbow(wait int) {
-	for j := 0; j < 256; j++ {
-		for i := 0; i < l.leds; i++ {
-			l.SetColor(i, Wheel((i+j)&255))
+func (l *LedStrip) Rainbow(done <-chan bool, wait int) {
+	var wg sync.WaitGroup
+	// out = l.Out
+	go func() {
+		wg.Add(1)
+		defer wg.Done()
+		for j := 0; j < 256; j++ {
+			for i := 0; i < l.leds; i++ {
+				l.SetColor(i, Wheel((i+j)&255))
+			}
+			select {
+			case <-done:
+				l.Reset()
+				l.Out <- l.OneBigArray()
+				log.Println("Rainbow Sequence exited.")
+				return
+			default:
+				l.Out <- l.OneBigArray()
+				time.Sleep(time.Duration(wait) * time.Millisecond)
+			}
 		}
-		l.Sync()
-		time.Sleep(time.Duration(wait) * time.Millisecond)
-	}
-	l.Reset()
-	l.Sync()
+	}()
 	log.Println("Finished Rainbow sequence")
+	return
 }
 
 // TheaterChase -- another test sequece that does as the name says

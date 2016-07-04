@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"neopixel"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	var testmode = flag.Bool("testmode", false, "Run in testmode (fakes serial connects)")
+
 	var usbport string
 	var usbspeed int
 	var hostport string
@@ -22,7 +25,7 @@ func main() {
 	}
 
 	// Initialize the strip with unmber of lights and usb parameters
-	strip := neopixel.NewStrip(60, usbport, usbspeed)
+	strip := neopixel.NewStrip(60, usbport, usbspeed, *testmode)
 	log.Println("NeoPixel Strip USB initialized.")
 
 	time.Sleep(time.Second * 1)
