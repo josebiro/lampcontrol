@@ -81,3 +81,18 @@ pkg/
 src/server/server
 src/client/client
 src/github.com/
+src/golang.org/
+src/gopkg.in/
+src/honnef.co/
+
+# Android Client ignores
+# =======================
+*.iml
+.gradle
+/local.properties
+android-client/.idea/
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures

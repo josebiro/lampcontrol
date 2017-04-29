@@ -1,9 +1,10 @@
 package neopixel
 
 import (
-	"github.com/tarm/serial"
 	"log"
 	"sync"
+
+	"github.com/tarm/serial"
 )
 
 // Led - object to hold specific LED color values
@@ -16,14 +17,15 @@ type LedStrip struct {
 	sync.RWMutex
 	s    *serial.Port
 	leds int
+	Done chan bool
 	In   chan []byte
 	Out  chan []byte
 	Leds []*Led
 }
 
 // NewStrip - initialize a number of LEDs as a strip and set to black (off)
-func NewStrip(leds int, port string, baud int) *LedStrip {
-	log.Println("Creating new strip: ", leds)
+func NewStrip(leds int, port string, baud int, testmode bool) *LedStrip {
+	log.Println("Creating new strip: ", leds, " ::testmode=", testmode)
 	log.Println("Connecting on port: ", port, " at baud ", baud)
 
 	c := &serial.Config{Name: port, Baud: baud}
@@ -42,6 +44,7 @@ func NewStrip(leds int, port string, baud int) *LedStrip {
 	strip := &LedStrip{
 		leds: leds,
 		s:    s,
+		Done: make(chan bool, 0),
 		In:   make(chan []uint8, 0),
 		Out:  make(chan []uint8, 0),
 		Leds: ledArray,
@@ -85,11 +88,11 @@ func (l *LedStrip) Sync() {
 func (l *LedStrip) reader() {
 	buf := make([]byte, 128)
 	for {
-		_, err := l.s.Read(buf)
+		n, err := l.s.Read(buf)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		//log.Printf("Received %d bytes: [%s]", n, buf[:n])
+		log.Printf("Received %d bytes: [%s]", n, buf[:n])
 		l.Unlock()
 	}
 }
@@ -100,11 +103,11 @@ func (l *LedStrip) writer() {
 		if !ok {
 			log.Fatal("writer chan closed")
 		}
-		_, err := l.s.Write(b)
+		n, err := l.s.Write(b)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		//log.Printf("Sent %d bytes", n)
+		log.Printf("Sent %d bytes", n)
 	}
 }
 

@@ -35,3 +35,11 @@ func (rgbw *Rgbw) SetColor(r uint8, g uint8, b uint8, w uint8) {
 func (rgbw *Rgbw) Uint8() []uint8 {
 	return []uint8{rgbw[0], rgbw[1], rgbw[2], rgbw[3]}
 }
+
+// RgbwFromUintArray - Return a new RGBW from a uint8 array
+func (rgbw *Rgbw) RgbwFromUintArray(a []uint8) {
+	rgbw.SetRed(a[0])
+	rgbw.SetGreen(a[1])
+	rgbw.SetBlue(a[2])
+	rgbw.SetWhite(a[3])
+}
