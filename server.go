@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"neopixel"
+	"git.josebiro.com/josebiro/lampcontrol/neopixel"
 	"net/http"
 	"runtime"
 	"time"
